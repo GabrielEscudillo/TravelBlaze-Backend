@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class CreateHotels1709471379928 implements MigrationInterface {
+export class CreateAppointments1709478886183 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: "hotels",
+                name: "appointments",
                 columns: [
                     {
                         name: "id",
@@ -14,31 +14,24 @@ export class CreateHotels1709471379928 implements MigrationInterface {
                         generationStrategy: "increment",
                     },
                     {
-                        name: "booking_id",
+                        name: "agent_id",
                         type: "int",
                     },
                     {
-                        name: "hotel_name",
-                        type: "varchar",
-                        length: "100",                        
-                     },
-                     {
-                        name: "address",
-                        type: "varchar",
-                        length: "100",                        
-                     },
-                     {
-                        name: "guests",
-                        type: "varchar",
-                        length: "100",                        
-                     },
-                     {
-                        name: "check_in_date",
-                        type: "date",
+                        name: "user_id",
+                        type: "int",
                     },
                     {
-                        name: "check_out_date",
-                        type: "date",
+                        name: "service_id",
+                        type: "int",
+                    },
+                    {
+                        name: "date",
+                        type: "date",                
+                     },
+                     {
+                       name: "time",
+                       type: "time",
                     },
                     {
                         name: "created_at",
@@ -54,19 +47,30 @@ export class CreateHotels1709471379928 implements MigrationInterface {
                 ],
                 foreignKeys: [  
                     {
-                        columnNames: ["booking_id"],
-                        referencedTableName: "bookings",
+                        columnNames: ["agent_id"],
+                        referencedTableName: "agents",
+                        referencedColumnNames: ["id"],
+                        onDelete: "CASCADE",
+                    },
+                    {
+                        columnNames: ["user_id"],
+                        referencedTableName: "users",
+                        referencedColumnNames: ["id"],
+                        onDelete: "CASCADE",
+                    },
+                    {
+                        columnNames: ["service_id"],
+                        referencedTableName: "services",
                         referencedColumnNames: ["id"],
                         onDelete: "CASCADE",
                     }
                 ]
-    
-            }),
+                }),
             true
            
         );
     }
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("hotels");
+        await queryRunner.dropTable("appointments");
      }
   }

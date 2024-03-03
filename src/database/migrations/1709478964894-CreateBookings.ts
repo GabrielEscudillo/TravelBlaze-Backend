@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class CreateAppointments1709395026587 implements MigrationInterface {
+export class CreateBookings1709478964894 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: "appointments",
+                name: "bookings",
                 columns: [
                     {
                         name: "id",
@@ -14,24 +14,33 @@ export class CreateAppointments1709395026587 implements MigrationInterface {
                         generationStrategy: "increment",
                     },
                     {
-                        name: "agent_id",
-                        type: "int",
-                    },
-                    {
                         name: "user_id",
                         type: "int",
                     },
                     {
-                        name: "service_id",
-                        type: "int",
+                        name: "date_of_purchase",
+                        type: "date",
                     },
                     {
-                        name: "date",
-                        type: "date",                
-                     },
-                     {
-                       name: "time",
-                       type: "time",
+                        name: "price",
+                        type: "decimal",
+                        precision: 10,
+                        scale: 2
+                    },
+                    {
+                        name: "flight_id",
+                        type: "int",
+                        isNullable: true,
+                    },                 
+                    {
+                        name: "hotel_id",
+                        type: "int",
+                        isNullable: true,
+                    },   
+                    {
+                        name: "cruise_id",
+                        type: "int",
+                        isNullable: true,
                     },
                     {
                         name: "created_at",
@@ -45,32 +54,20 @@ export class CreateAppointments1709395026587 implements MigrationInterface {
                         onUpdate: "CURRENT_TIMESTAMP"
                     },
                 ],
-                foreignKeys: [  
-                    {
-                        columnNames: ["agent_id"],
-                        referencedTableName: "agents",
-                        referencedColumnNames: ["id"],
-                        onDelete: "CASCADE",
-                    },
+                foreignKeys: [
                     {
                         columnNames: ["user_id"],
                         referencedTableName: "users",
                         referencedColumnNames: ["id"],
                         onDelete: "CASCADE",
                     },
-                    {
-                        columnNames: ["service_id"],
-                        referencedTableName: "services",
-                        referencedColumnNames: ["id"],
-                        onDelete: "CASCADE",
-                    }
-                ]
+                  ],
                 }),
             true
            
         );
     }
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("appointments");
+        await queryRunner.dropTable("bookings");
      }
   }
