@@ -16,9 +16,6 @@ export class User {
     last_name!: string;
 
     @Column()
-    photo?: string;
-
-    @Column()
     address!: string;
 
     @Column()
@@ -28,7 +25,7 @@ export class User {
     password_hash!: string
 
     @Column()
-    phone_number!: number;
+    phone_number!: string;
 
     @Column()
     created_at!: Date;

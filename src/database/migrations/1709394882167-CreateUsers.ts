@@ -36,8 +36,8 @@ export class CreateUsers1709394882167 implements MigrationInterface {
                     },
                      {
                         name: "phone_number",
-                        type: "int",
-                        length: "20",
+                        type: "varchar",
+                        length: "255",
                         isUnique: true,
                     },
                     {
