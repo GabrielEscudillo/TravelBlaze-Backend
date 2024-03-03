@@ -15,25 +15,33 @@ export class CreateBookings1709471120413 implements MigrationInterface {
                         generationStrategy: "increment",
                     },
                     {
-                        name: "customer_id",
+                        name: "user_id",
                         type: "int",
-                        length: "100",                        
-                    },
-                    {
-                        name: "type_id",
-                        type: "int",
-                        length: "100",                        
                     },
                     {
                         name: "date_of_purchase",
                         type: "date",
-                        length: "100",                        
                     },
                     {
                         name: "price",
                         type: "decimal",
                         precision: 10,
                         scale: 2
+                    },
+                    {
+                        name: "flight_id",
+                        type: "int",
+                        isNullable: true,
+                    },                 
+                    {
+                        name: "hotel_id",
+                        type: "int",
+                        isNullable: true,
+                    },   
+                    {
+                        name: "cruise_id",
+                        type: "int",
+                        isNullable: true,
                     },
                     {
                         name: "created_at",
@@ -47,6 +55,32 @@ export class CreateBookings1709471120413 implements MigrationInterface {
                         onUpdate: "CURRENT_TIMESTAMP"
                     },
                 ],
+                foreignKeys: [
+                    {
+                        columnNames: ["user_id"],
+                        referencedTableName: "users",
+                        referencedColumnNames: ["id"],
+                        onDelete: "CASCADE",
+                    },
+                    {
+                      columnNames: ["flight_id"],
+                      referencedTableName: "flights",
+                      referencedColumnNames: ["id"],
+                      onDelete: "CASCADE",
+                    },
+                    {
+                        columnNames: ["hotel_id"],
+                        referencedTableName: "hotels",
+                        referencedColumnNames: ["id"],
+                        onDelete: "CASCADE",
+                    },
+                    {
+                        columnNames: ["cruise_id"],
+                        referencedTableName: "cruises",
+                        referencedColumnNames: ["id"],
+                        onDelete: "CASCADE",
+                    },
+                  ],
                 }),
             true
            
