@@ -18,7 +18,7 @@ export class CreateAppointments1709395026587 implements MigrationInterface {
                         type: "int",
                     },
                     {
-                        name: "customer_id",
+                        name: "user_id",
                         type: "int",
                     },
                     {
@@ -53,8 +53,14 @@ export class CreateAppointments1709395026587 implements MigrationInterface {
                         onDelete: "CASCADE",
                     },
                     {
-                        columnNames: ["customer_id"],
-                        referencedTableName: "customers",
+                        columnNames: ["user_id"],
+                        referencedTableName: "users",
+                        referencedColumnNames: ["id"],
+                        onDelete: "CASCADE",
+                    },
+                    {
+                        columnNames: ["service_id"],
+                        referencedTableName: "services",
                         referencedColumnNames: ["id"],
                         onDelete: "CASCADE",
                     }

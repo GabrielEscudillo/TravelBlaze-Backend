@@ -1,11 +1,11 @@
 import { MigrationInterface, QueryRunner, Table } from "typeorm";
 
-export class CreateCustomers1709395016669 implements MigrationInterface {
+export class CreateBookings1709471120413 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.createTable(
             new Table({
-                name: "customers",
+                name: "bookings",
                 columns: [
                     {
                         name: "id",
@@ -15,29 +15,25 @@ export class CreateCustomers1709395016669 implements MigrationInterface {
                         generationStrategy: "increment",
                     },
                     {
-                        name: "user_id",
+                        name: "customer_id",
                         type: "int",
+                        length: "100",                        
                     },
                     {
-                        name: "name",
-                        type: "varchar",
-                        length: "100",                        
-                     },
-                     {
-                        name: "last_name",
-                        type: "varchar",
-                        length: "100",                        
-                     },
-                     {
-                        name: "address",
-                        type: "varchar",
-                        length: "255",
-                    },
-                     {
-                        name: "phone_number",
+                        name: "type_id",
                         type: "int",
-                        length: "20",
-                        isUnique: true,
+                        length: "100",                        
+                    },
+                    {
+                        name: "date_of_purchase",
+                        type: "date",
+                        length: "100",                        
+                    },
+                    {
+                        name: "price",
+                        type: "decimal",
+                        precision: 10,
+                        scale: 2
                     },
                     {
                         name: "created_at",
@@ -51,22 +47,12 @@ export class CreateCustomers1709395016669 implements MigrationInterface {
                         onUpdate: "CURRENT_TIMESTAMP"
                     },
                 ],
-                foreignKeys: [  
-                    {
-                        columnNames: ["user_id"],
-                        referencedTableName: "users",
-                        referencedColumnNames: ["id"],
-                        onDelete: "CASCADE",
-                    }
-                ]
-    
-            }),
+                }),
             true
            
         );
     }
-
     public async down(queryRunner: QueryRunner): Promise<void> {
-        await queryRunner.dropTable("customers");
+        await queryRunner.dropTable("bookings");
      }
   }
