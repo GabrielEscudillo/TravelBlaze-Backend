@@ -9,6 +9,6 @@ const userController = new UserController();
 router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.get("/:id", userController.getProfile);
-
+router.patch("/:id", userController.update);
 
 export default router;

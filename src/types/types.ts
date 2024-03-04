@@ -16,3 +16,11 @@ export interface TokenData {
     userId: string;
     userRoles: string;
  }
+
+ export interface CreateAppointmentsRequestBody {
+   user_id: number;
+   agent_id: number;
+   service_id: number;
+   date: Date;
+   time: string;
+}
