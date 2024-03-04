@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import {
     CreateUserRequestBody,
+    LoginUserRequestBody,
     TokenData,
   } from "../types/types";
 import { User } from "../models/User";
@@ -43,4 +44,105 @@ export class UserController {
           error: error.message,
         });
       }
-    }}
+    }
+  
+    async login(
+      req: Request<{}, {}, LoginUserRequestBody>,
+      res: Response
+    ): Promise<void | Response<any>> {
+      const { password_hash, email } = req.body;
+      const userRepository = AppDataSource.getRepository(User);
+  
+      try {
+        // Validar existencia de email y contraseña
+        if (!email || !password_hash) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Email or password is required",
+          });
+        }
+        // Encontrar un usuario por email
+        const user = await userRepository.findOne({
+          where: {
+            email: email,
+          },
+          relations: {
+            role: true,
+          },
+          select: {
+            id:true,
+            password_hash: true,
+            role: {
+              role_name: true,
+            },
+          },
+        });
+  
+        // Verificar usuario inexistente
+        if (!user) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Bad email or password",
+          });
+        }
+  
+        // Verificar contraseña si el usuario existe
+        const isPasswordValid = bcrypt.compareSync(password_hash, user.password_hash);
+  
+        // Verificar contraseña valida
+        if (!isPasswordValid) {
+          return res.status(StatusCodes.BAD_REQUEST).json({
+            message: "Bad email or password",
+          });
+        }
+  
+        // Generar token
+        const userRole = user.role.role_name;
+  
+        const tokenPayload: TokenData = {
+          userId: user.id?.toString() as string,
+          userRoles: userRole as string,
+        };
+  
+        const token = jwt.sign(tokenPayload, "123", {
+          expiresIn: "3h",
+        });
+  
+        res.status(StatusCodes.OK).json({
+          message: "Login successfully",
+          token,
+        });
+      } catch (error) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+          message: "Error while login",
+          error,
+        });
+      }
+    }
+  
+    async getProfile(req: Request, res: Response): Promise<void | Response<any>> {
+      try {
+        const id = +req.params.id;
+  
+        const userRepository = AppDataSource.getRepository(User);
+        const user = await userRepository.find({
+          where: { id: id }, // Filtrar citas por el ID del usuario
+          select: ["id", "name", "last_name", "phone_number", "email", "address"], // Seleccionar solo los campos necesarios
+        });
+  
+        if (!user) {
+          return res.status(404).json({
+            message: "User not found",
+          });
+        }
+  
+        res.status(200).json(user);
+      } catch (error) {
+        res.status(500).json({
+          message: "Error while getting user",
+        });
+      }
+    }
+
+  
+  
+  
+  }
