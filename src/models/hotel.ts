@@ -15,10 +15,10 @@ export class Hotel {
     @Column()
     guests!: number;
 
-    @Column()
+    @Column({ type: "date" })
     check_in_date!: Date;
 
-    @Column()
+    @Column({ type: "date" })
     check_out_date!: Date;
 
     @Column()

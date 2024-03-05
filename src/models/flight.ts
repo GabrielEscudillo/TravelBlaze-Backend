@@ -18,10 +18,10 @@ export class Flight {
     @Column()
     destination!: string;
 
-    @Column()
+    @Column({ type: "date" })
     date_of_departure!: string;
 
-    @Column()
+    @Column({ type: "date" })
     date_of_return!: string;
 
     @Column()

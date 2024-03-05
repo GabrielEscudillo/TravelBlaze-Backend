@@ -15,10 +15,10 @@ export class Cruise {
     @Column()
     route!: string;
 
-    @Column()
+    @Column({ type: "date" })
     date_of_departure!: Date;
 
-    @Column()
+    @Column({ type: "date" })
     date_of_return!: Date;
 
     @Column()
