@@ -23,6 +23,9 @@ export class Booking {
     flight_id?: number;
 
     @Column({ nullable: true }) // Permite que flight_id sea nulo inicialmente
+    cruise_id?: number;
+
+    @Column({ nullable: true }) // Permite que flight_id sea nulo inicialmente
     hotel_id?: number;
 
     @Column()

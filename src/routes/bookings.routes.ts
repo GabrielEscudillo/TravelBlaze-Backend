@@ -4,6 +4,8 @@ import { BookingController } from "../controllers/BookingController";
 const router = express.Router();
 const bookingController = new BookingController();
 
-router.post("/newflight", bookingController.createFlight);
+router.post("/newbooking", bookingController.createBooking);
+router.post("/newcruise", bookingController.createCruise);
+
 
 export default router;

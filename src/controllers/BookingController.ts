@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { Booking } from "../models/Booking";
 import { Flight } from "../models/Flight";
 import { Hotel } from "../models/Hotel";
+import { Cruise } from "../models/Cruise";
 
 export class BookingController {
   // async createFlight(
@@ -56,7 +57,7 @@ export class BookingController {
   //         });
   //       }
 
-  async createFlight(
+  async createBooking(
     req: Request<{}, {}>,
     res: Response
   ): Promise<void | Response<any>> {
@@ -150,4 +151,52 @@ export class BookingController {
       });
     }
   }
-}
+
+    async createCruise(
+      req: Request<{}, {}>,
+      res: Response
+    ): Promise<void | Response<any>> {
+      const { date_of_purchase, price, user_id } = req.body;
+      const { cruise_line, cabin, route, date_of_departure, date_of_return } = req.body;
+
+      const bookingRepository = AppDataSource.getRepository(Booking);
+      const cruiseRepository = AppDataSource.getRepository(Cruise);
+
+      try {
+          // Crear nuevo booking
+          const newBooking = await bookingRepository.create({
+            user_id,
+            date_of_purchase,
+            price,
+            created_at: new Date(),
+            updated_at: new Date(),
+          });
+          await bookingRepository.save(newBooking);
+
+          // Crear nuevo vuelo asociado al booking
+          const newCruise = cruiseRepository.create({
+            booking: newBooking,
+            cruise_line,
+            cabin,
+            route,
+            date_of_departure,
+            date_of_return
+          });
+          const savedCruise = await cruiseRepository.save(newCruise);
+
+          // Obtener el ID del vuelo guardado
+          const cruiseId = savedCruise.id;
+
+          // Actualizar el booking con el ID del vuelo generado
+          newBooking.cruise_id = cruiseId;
+          await bookingRepository.save(newBooking);
+
+          res.status(201).json(savedCruise);
+        } catch (error: any) {
+          console.error("Error while creating flight:", error);
+          res.status(500).json({
+            message: "Error while creating flight",
+            error: error.message,
+          });
+        }
+}}
