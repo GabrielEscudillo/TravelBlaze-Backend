@@ -34,9 +34,8 @@ export class CreateFlights1709478964895 implements MigrationInterface {
                     },
                      {
                         name: "destination",
-                        type: "int",
-                        length: "20",
-                        isUnique: true,
+                        type: "varchar",
+                        length: "255",
                     },
                     {
                         name: "date_of_departure",

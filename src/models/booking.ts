@@ -5,7 +5,7 @@ import { Hotel } from './Hotel';
 import { Cruise } from './Cruise';
 
 
-@Entity()
+@Entity("bookings")
 export class Booking {
     @PrimaryGeneratedColumn()
     id?: number;
@@ -15,6 +15,12 @@ export class Booking {
 
     @Column({ type: "decimal", precision: 10, scale: 2 })
     price!: number;
+
+    @Column()
+    user_id!: string;
+    
+    @Column({ nullable: true }) // Permite que flight_id sea nulo inicialmente
+    flight_id?: number;
 
     @Column()
     created_at!: Date;
