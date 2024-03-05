@@ -40,6 +40,45 @@ export class AppointmentController {
         }
       }
     
+      async updateAppointment(
+        req: Request,
+        res: Response
+      ): Promise<void | Response<any>> {
+        try {
+          const id = +req.params.id;
+          const data = req.body;
+    
+          const appointmentRepository = AppDataSource.getRepository(Appointment);
+          await appointmentRepository.update({ id: id }, data);
+    
+          res.status(202).json({
+            message: "Appointment updated successfully",
+          });
+        } catch (error) {
+          res.status(500).json({
+            message: "Error while updating appointment",
+          });
+        }
+      }
 
+      async deleteAppointment(
+        req: Request,
+        res: Response
+      ): Promise<void | Response<any>> {
+        try {
+          const id = +req.params.id;
+    
+          const appointmentRepository = AppDataSource.getRepository(Appointment);
+          await appointmentRepository.delete(id);
+    
+          res.status(200).json({
+            message: "Appointment deleted successfully",
+          });
+        } catch (error) {
+          res.status(500).json({
+            message: "Error while deleting appointment",
+          });
+        }
+      }
       
     }

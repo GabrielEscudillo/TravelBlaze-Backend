@@ -6,5 +6,7 @@ const router = express.Router();
 const appointmentController = new AppointmentController();
 
 router.post("/newAppointment", appointmentController.create)
+router.patch("/:id", appointmentController.updateAppointment)
+router.delete("/:id", appointmentController.deleteAppointment)
 
 export default router;
