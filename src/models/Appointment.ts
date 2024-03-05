@@ -12,8 +12,17 @@ export class Appointment {
   @Column({ type: "date" })
   date!: Date;
 
+  @Column()
+  user_id!: number;
+
+  @Column()
+  agent_id!: number;
+
+  @Column()
+  service_id!: number;
+
   @Column({ type: "time" })
-  time!: Date;
+  time!: string;
 
   @Column()
   created_at!: Date;

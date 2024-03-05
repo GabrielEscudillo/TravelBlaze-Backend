@@ -10,6 +10,7 @@ export class AppointmentController {
         req: Request<{}, {}, CreateAppointmentsRequestBody>,
         res: Response
       ): Promise<void | Response<any>> {
+
         try {
           const data = req.body;
           const appointmentRepository = AppDataSource.getRepository(Appointment);
