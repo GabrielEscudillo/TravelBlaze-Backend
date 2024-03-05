@@ -168,8 +168,6 @@ export class BookingController {
             user_id,
             date_of_purchase,
             price,
-            created_at: new Date(),
-            updated_at: new Date(),
           });
           await bookingRepository.save(newBooking);
 
@@ -199,4 +197,53 @@ export class BookingController {
             error: error.message,
           });
         }
-}}
+}
+async getMyBookings(req: Request, res: Response): Promise<void | Response<any>> {
+    try {
+      const id = +req.params.id;
+      const bookingRepository = AppDataSource.getRepository(Booking);
+      const myBookings = await bookingRepository.find({
+        where: { user_id: id }, // Filtrar citas por el ID del usuario
+        relations: ["flight", "hotel", "cruise"], // Cargar las relaciones del agenta y del usuario asociado
+        select: ["id", "date_of_purchase", "price", "user_id" ], // Seleccionar solo los campos necesarios
+      });
+
+      // Mapear las citas para incluir el nombre del agenta
+      const bookingWithDetails = myBookings.map((booking) => ({
+        id: booking.id,
+        date_of_purchase: booking.date_of_purchase,
+        price: booking.price,
+        flight: booking.flight ? { // Verificar si hay un vuelo asociado
+          id: booking.flight.id,
+          airline: booking.flight.airline,
+          flight_number: booking.flight.flight_number,
+          departure: booking.flight.departure,
+          destination: booking.flight.destination,
+          date_of_departure: booking.flight.date_of_departure,
+          date_of_return: booking.flight.date_of_return,
+        } : null,
+        hotel: booking.hotel ? { // Verificar si hay un hotel asociado
+            id: booking.hotel.id,
+            hotel_name: booking.hotel.hotel_name,
+            address: booking.hotel.address,
+            guests: booking.hotel.guests,
+            check_in_date: booking.hotel.check_in_date,
+            check_out_date: booking.hotel.check_out_date,
+          } : null, // Si no hay hotel asociado, establecer a null
+        cruise: booking.cruise ? {
+            id: booking.cruise.id,
+            cabin: booking.cruise.cabin,
+            route: booking.cruise.route,
+            date_of_departure: booking.cruise.date_of_departure,
+            date_of_return: booking.cruise.date_of_return,
+        } : null,
+      }));
+
+      res.status(200).json(bookingWithDetails);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error while getting bookings"
+      });
+    }
+  }
+}
