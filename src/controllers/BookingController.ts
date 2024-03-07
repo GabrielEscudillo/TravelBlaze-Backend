@@ -351,4 +351,25 @@ export class BookingController {
     }
   }
 
+  async deleteBooking(
+    req: Request,
+    res: Response
+  ): Promise<void | Response<any>> {
+    try {
+      const id = +req.params.id;
+
+      const bookingRepository = AppDataSource.getRepository(Booking);
+      await bookingRepository.delete(id);
+
+      res.status(200).json({
+        message: "booking deleted successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error while deleting booking",
+      });
+    }
+  }
+
+
 }

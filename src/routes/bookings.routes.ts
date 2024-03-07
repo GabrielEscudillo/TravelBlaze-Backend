@@ -8,6 +8,7 @@ router.post("/newbooking", bookingController.createBooking);
 router.post("/newcruise", bookingController.createCruise);
 router.get("/mybookings/:id", bookingController.getMyBookings);
 router.get("/allbookings", bookingController.getAllBookings);
+router.delete("/:id", bookingController.deleteBooking);
 
 
 export default router;
