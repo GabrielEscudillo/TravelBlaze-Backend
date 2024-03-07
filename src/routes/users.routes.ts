@@ -12,6 +12,8 @@ router.post("/login", userController.login);
 router.get("/:id", userController.getProfile);
 router.patch("/:id", userController.update);
 router.get("/get/allusers", userController.getAllUsers);
+router.delete("/:id", userController.deleteUser);
+
 
 
 export default router;

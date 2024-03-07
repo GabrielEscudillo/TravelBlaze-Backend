@@ -254,4 +254,21 @@ export class UserController {
       });
     }
   }
+
+  async deleteUser(req: Request, res: Response): Promise<void | Response<any>> {
+    try {
+      const id = +req.params.id;
+
+      const userRepository = AppDataSource.getRepository(User);
+      await userRepository.delete({ id: id });
+
+      res.status(200).json({
+        message: "user deleted successfully",
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error while deleting user",
+      });
+    }
+  }
 }
