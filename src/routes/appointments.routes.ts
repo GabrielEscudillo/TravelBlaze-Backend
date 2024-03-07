@@ -10,6 +10,8 @@ router.patch("/:id", appointmentController.updateAppointment)
 router.delete("/:id", appointmentController.deleteAppointment)
 router.get("/agent/:id", appointmentController.getByAgent)
 router.get("/user/:id", appointmentController.getById)
+router.get("/allappointments", appointmentController.getAllAppointments)
+
 
 
 export default router;
