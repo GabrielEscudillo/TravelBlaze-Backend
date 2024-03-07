@@ -137,7 +137,7 @@ export class UserController {
         res.status(200).json(user);
       } catch (error) {
         res.status(500).json({
-          message: "Error while getting user",
+          message: "Error while getting userxdd",
         });
       }
     }
@@ -159,6 +159,54 @@ export class UserController {
         });
       }
     }
-  
 
-  }
+    async getAllUsers(req: Request, res: Response): Promise<void | Response<any>> {
+        try {
+          const userRepository = AppDataSource.getRepository(User);
+    
+          const page = req.query.page ? Number(req.query.page) : null;
+          const limit = req.query.limit ? Number(req.query.limit) : null;
+    
+          interface filter {
+            [key: string]: any;
+          }
+          const filter: any = {
+            select: {
+              id: true,
+              name: true,
+              last_name: true,
+              phone_number: true,
+              role: true
+            },
+            relations: ["role"]
+          };
+    
+          if (page && limit) {
+            filter.skip = (page - 1) * limit;
+          }
+          if (limit) {
+            filter.take = limit;
+          }
+    
+          const [allUsers, count] = await userRepository.findAndCount(
+            filter
+          );
+
+          const usersWithRoles = allUsers.map(user => ({
+            ...user,
+            role_name: user.role.role_name, // Assuming 'name' is the property for artist's name
+    
+        }));
+          res.status(200).json({
+            count,
+            limit,
+            page,
+            results: usersWithRoles,
+          });
+        } catch (error) {
+          res.status(500).json({
+            message: "Error while getting users",
+          });
+        }
+      }
+}

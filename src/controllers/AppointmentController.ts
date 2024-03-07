@@ -148,7 +148,7 @@ export class AppointmentController {
           });
     
           // Mapear las citas para incluir el nombre del agenta
-          const appointmentsWithagentName = myAppointments.map((appointment) => ({
+          const appointmentsWithAgentName = myAppointments.map((appointment) => ({
             id: appointment.id,
             date: appointment.date,
             time: appointment.time,
@@ -163,7 +163,7 @@ export class AppointmentController {
             }
           }));
     
-          res.status(200).json(appointmentsWithagentName);
+          res.status(200).json(appointmentsWithAgentName);
         } catch (error) {
           res.status(500).json({
             message: "Error while getting appointments",

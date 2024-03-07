@@ -152,124 +152,128 @@ export class BookingController {
     }
   }
 
-    async createCruise(
-      req: Request<{}, {}>,
-      res: Response
-    ): Promise<void | Response<any>> {
-      const { date_of_purchase, price, user_id } = req.body;
-      const { cruise_line, cabin, route, date_of_departure, date_of_return } = req.body;
+  async createCruise(
+    req: Request<{}, {}>,
+    res: Response
+  ): Promise<void | Response<any>> {
+    const { date_of_purchase, price, user_id } = req.body;
+    const { cruise_line, cabin, route, date_of_departure, date_of_return } =
+      req.body;
 
-      const bookingRepository = AppDataSource.getRepository(Booking);
-      const cruiseRepository = AppDataSource.getRepository(Cruise);
+    const bookingRepository = AppDataSource.getRepository(Booking);
+    const cruiseRepository = AppDataSource.getRepository(Cruise);
 
-      try {
-          // Crear nuevo booking
-          const newBooking = await bookingRepository.create({
-            user_id,
-            date_of_purchase,
-            price,
-          });
-          await bookingRepository.save(newBooking);
-
-          // Crear nuevo vuelo asociado al booking
-          const newCruise = cruiseRepository.create({
-            booking: newBooking,
-            cruise_line,
-            cabin,
-            route,
-            date_of_departure,
-            date_of_return
-          });
-          const savedCruise = await cruiseRepository.save(newCruise);
-
-          // Obtener el ID del vuelo guardado
-          const cruiseId = savedCruise.id;
-
-          // Actualizar el booking con el ID del vuelo generado
-          newBooking.cruise_id = cruiseId;
-          await bookingRepository.save(newBooking);
-
-          res.status(201).json(savedCruise);
-        } catch (error: any) {
-          console.error("Error while creating flight:", error);
-          res.status(500).json({
-            message: "Error while creating flight",
-            error: error.message,
-          });
-        }
-}
-async getMyBookings(req: Request, res: Response): Promise<void | Response<any>> {
     try {
-        const id = +req.params.id;
-        const bookingRepository = AppDataSource.getRepository(Booking);
-      
-        const page = req.query.page ? Number(req.query.page) : null;
-        const limit = req.query.limit ? Number(req.query.limit) : null;
-      
-        const filter: any = {
-          where: { user_id: id },
-          relations: ["flight", "hotel", "cruise"],
-          select: ["id", "date_of_purchase", "price", "user_id"],
-        };
-      
-        if (page && limit) {
-          filter.skip = (page - 1) * limit;
-        }
-        if (limit) {
-          filter.take = limit;
-        }
-      
-        const [myBookings, count] = await Promise.all([
-          bookingRepository.find(filter),
-          bookingRepository.count(filter.where),
-        ]);
-      
-        const bookingWithDetails = myBookings.map((booking) => ({
-          id: booking.id,
-          date_of_purchase: booking.date_of_purchase,
-          price: booking.price,
-          flight: booking.flight
-            ? {
-                id: booking.flight.id,
-                airline: booking.flight.airline,
-                flight_number: booking.flight.flight_number,
-                departure: booking.flight.departure,
-                destination: booking.flight.destination,
-                date_of_departure: booking.flight.date_of_departure,
-                date_of_return: booking.flight.date_of_return,
-              }
-            : null,
-          hotel: booking.hotel
-            ? {
-                id: booking.hotel.id,
-                hotel_name: booking.hotel.hotel_name,
-                address: booking.hotel.address,
-                guests: booking.hotel.guests,
-                check_in_date: booking.hotel.check_in_date,
-                check_out_date: booking.hotel.check_out_date,
-              }
-            : null,
-          cruise: booking.cruise
-            ? {
-                id: booking.cruise.id,
-                cabin: booking.cruise.cabin,
-                route: booking.cruise.route,
-                date_of_departure: booking.cruise.date_of_departure,
-                date_of_return: booking.cruise.date_of_return,
-              }
-            : null,
-        }));
-      
-        res.status(200).json({
-          count,
-          limit,
-          page,
-          results: bookingWithDetails,
-        });
-      } catch (error) {
-        res.status(500).json({
-          message: "Error while getting bookings",
-        });
+      // Crear nuevo booking
+      const newBooking = await bookingRepository.create({
+        user_id,
+        date_of_purchase,
+        price,
+      });
+      await bookingRepository.save(newBooking);
+
+      // Crear nuevo vuelo asociado al booking
+      const newCruise = cruiseRepository.create({
+        booking: newBooking,
+        cruise_line,
+        cabin,
+        route,
+        date_of_departure,
+        date_of_return,
+      });
+      const savedCruise = await cruiseRepository.save(newCruise);
+
+      // Obtener el ID del vuelo guardado
+      const cruiseId = savedCruise.id;
+
+      // Actualizar el booking con el ID del vuelo generado
+      newBooking.cruise_id = cruiseId;
+      await bookingRepository.save(newBooking);
+
+      res.status(201).json(savedCruise);
+    } catch (error: any) {
+      console.error("Error while creating flight:", error);
+      res.status(500).json({
+        message: "Error while creating flight",
+        error: error.message,
+      });
+    }
+  }
+  async getMyBookings(
+    req: Request,
+    res: Response
+  ): Promise<void | Response<any>> {
+    try {
+      const id = +req.params.id;
+      const bookingRepository = AppDataSource.getRepository(Booking);
+
+      const page = req.query.page ? Number(req.query.page) : null;
+      const limit = req.query.limit ? Number(req.query.limit) : null;
+
+      const filter: any = {
+        where: { user_id: id },
+        relations: ["flight", "hotel", "cruise"],
+        select: ["id", "date_of_purchase", "price", "user_id"],
+      };
+
+      if (page && limit) {
+        filter.skip = (page - 1) * limit;
       }
-      
-}}
+      if (limit) {
+        filter.take = limit;
+      }
+
+      const [myBookings, count] = await Promise.all([
+        bookingRepository.find(filter),
+        bookingRepository.count(filter.where),
+      ]);
+
+      const bookingWithDetails = myBookings.map((booking) => ({
+        id: booking.id,
+        date_of_purchase: booking.date_of_purchase,
+        price: booking.price,
+        flight: booking.flight
+          ? {
+              id: booking.flight.id,
+              airline: booking.flight.airline,
+              flight_number: booking.flight.flight_number,
+              departure: booking.flight.departure,
+              destination: booking.flight.destination,
+              date_of_departure: booking.flight.date_of_departure,
+              date_of_return: booking.flight.date_of_return,
+            }
+          : null,
+        hotel: booking.hotel
+          ? {
+              id: booking.hotel.id,
+              hotel_name: booking.hotel.hotel_name,
+              address: booking.hotel.address,
+              guests: booking.hotel.guests,
+              check_in_date: booking.hotel.check_in_date,
+              check_out_date: booking.hotel.check_out_date,
+            }
+          : null,
+        cruise: booking.cruise
+          ? {
+              id: booking.cruise.id,
+              cabin: booking.cruise.cabin,
+              route: booking.cruise.route,
+              date_of_departure: booking.cruise.date_of_departure,
+              date_of_return: booking.cruise.date_of_return,
+            }
+          : null,
+      }));
+
+      res.status(200).json({
+        count,
+        limit,
+        page,
+        results: bookingWithDetails,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error while getting bookings",
+      });
+    }
+  }
+}

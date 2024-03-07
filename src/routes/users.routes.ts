@@ -10,5 +10,7 @@ router.post("/register", userController.register);
 router.post("/login", userController.login);
 router.get("/:id", userController.getProfile);
 router.patch("/:id", userController.update);
+router.get("/get/allusers", userController.getAllUsers);
+
 
 export default router;

@@ -24,3 +24,15 @@ export interface TokenData {
    date: Date;
    time: string;
 }
+
+export interface CreateAgentRequestBody {
+   user_id: number;
+   photo: string;
+   specialty: string;
+   name: string;
+   last_name: string;
+   address: string;
+   email: string;
+   phone_number: string;
+   password_hash: string;
+}
