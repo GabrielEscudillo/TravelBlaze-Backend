@@ -165,7 +165,7 @@ export class BookingController {
 
     try {
       // Crear nuevo booking
-      const newBooking = await bookingRepository.create({
+      const newBooking = bookingRepository.create({
         user_id,
         date_of_purchase,
         price,

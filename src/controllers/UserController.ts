@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import {
+  CreateAgentRequestBody,
   CreateUserRequestBody,
   LoginUserRequestBody,
   TokenData,
@@ -10,6 +11,7 @@ import { AppDataSource } from "../database/data-source";
 import { StatusCodes } from "http-status-codes";
 import jwt from "jsonwebtoken";
 import { UserRoles } from "../constants/UserRoles";
+import { Agent } from "../models/Agent";
 
 export class UserController {
   async register(
@@ -208,6 +210,47 @@ export class UserController {
     } catch (error) {
       res.status(500).json({
         message: "Error while getting users",
+      });
+    }
+  }
+  async createAgent(
+    req: Request<{}, {}, CreateAgentRequestBody>,
+    res: Response
+  ): Promise<void | Response<any>> {
+    const { name, last_name, phone_number, address, email, password_hash } =
+      req.body;
+    const { photo, specialty } = req.body;
+
+    const userRepository = AppDataSource.getRepository(User);
+    const agentRepository = AppDataSource.getRepository(Agent);
+
+    try {
+      // Crear nuevo booking
+      const newUser = userRepository.create({
+        name,
+        last_name,
+        address,
+        email,
+        phone_number,
+        password_hash: bcrypt.hashSync(password_hash, 10),
+        role: UserRoles.AGENT,
+      });
+      await userRepository.save(newUser);
+
+      // Crear nuevo vuelo asociado al booking
+      const newAgent = agentRepository.create({
+        user: newUser,
+        photo,
+        specialty,
+      });
+     await agentRepository.save(newAgent);
+
+      res.status(201).json(newAgent);
+    } catch (error: any) {
+      console.error("Error while creating flightxxx:", error);
+      res.status(500).json({
+        message: "Error while creating flightxxx",
+        error: error.message,
       });
     }
   }
