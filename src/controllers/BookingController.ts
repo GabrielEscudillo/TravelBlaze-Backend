@@ -276,4 +276,79 @@ export class BookingController {
       });
     }
   }
+
+  async getAllBookings(
+    req: Request,
+    res: Response
+  ): Promise<void | Response<any>> {
+    try {
+      const bookingRepository = AppDataSource.getRepository(Booking);
+
+      const page = req.query.page ? Number(req.query.page) : null;
+      const limit = req.query.limit ? Number(req.query.limit) : null;
+
+      const filter: any = {
+        relations: ["flight", "hotel", "cruise", "user"],
+        select: ["id", "date_of_purchase", "price", "user"],
+      };
+
+      if (page && limit) {
+        filter.skip = (page - 1) * limit;
+      }
+      if (limit) {
+        filter.take = limit;
+      }
+
+      const [allBookings, count] = await bookingRepository.findAndCount(filter);
+
+       const bookingWithDetails = allBookings.map((booking) => ({
+        id: booking.id,
+        date_of_purchase: booking.date_of_purchase,
+        price: booking.price,
+        user: booking.user,
+        flight: booking.flight
+          ? {
+              id: booking.flight.id,
+              airline: booking.flight.airline,
+              flight_number: booking.flight.flight_number,
+              departure: booking.flight.departure,
+              destination: booking.flight.destination,
+              date_of_departure: booking.flight.date_of_departure,
+              date_of_return: booking.flight.date_of_return,
+            }
+          : null,
+        hotel: booking.hotel
+          ? {
+              id: booking.hotel.id,
+              hotel_name: booking.hotel.hotel_name,
+              address: booking.hotel.address,
+              guests: booking.hotel.guests,
+              check_in_date: booking.hotel.check_in_date,
+              check_out_date: booking.hotel.check_out_date,
+            }
+          : null,
+        cruise: booking.cruise
+          ? {
+              id: booking.cruise.id,
+              cabin: booking.cruise.cabin,
+              route: booking.cruise.route,
+              date_of_departure: booking.cruise.date_of_departure,
+              date_of_return: booking.cruise.date_of_return,
+            }
+          : null,
+      }));
+
+      res.status(200).json({
+        count,
+        limit,
+        page,
+        results: bookingWithDetails,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Error while getting bookings",
+      });
+    }
+  }
+
 }

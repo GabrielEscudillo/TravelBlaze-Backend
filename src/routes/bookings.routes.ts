@@ -7,6 +7,7 @@ const bookingController = new BookingController();
 router.post("/newbooking", bookingController.createBooking);
 router.post("/newcruise", bookingController.createCruise);
 router.get("/mybookings/:id", bookingController.getMyBookings);
+router.get("/allbookings", bookingController.getAllBookings);
 
 
 export default router;
