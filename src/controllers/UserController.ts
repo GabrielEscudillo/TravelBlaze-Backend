@@ -18,7 +18,7 @@ export class UserController {
     req: Request<{}, {}, CreateUserRequestBody>,
     res: Response
   ): Promise<void | Response<any>> {
-    const { name, last_name, address, email, phone_number, password_hash } =
+    const { name, last_name, address, email, phone_number, password } =
       req.body;
 
     const userRepository = AppDataSource.getRepository(User);
@@ -30,7 +30,7 @@ export class UserController {
         address,
         email,
         phone_number,
-        password_hash: bcrypt.hashSync(password_hash, 10),
+        password_hash: bcrypt.hashSync(password, 10),
         role: UserRoles.CUSTOMER,
       });
 
@@ -51,12 +51,12 @@ export class UserController {
     req: Request<{}, {}, LoginUserRequestBody>,
     res: Response
   ): Promise<void | Response<any>> {
-    const { password_hash, email } = req.body;
+    const { password, email } = req.body;
     const userRepository = AppDataSource.getRepository(User);
 
     try {
       // Validar existencia de email y contraseña
-      if (!email || !password_hash) {
+      if (!email || !password) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           message: "Email or password is required",
         });
@@ -87,7 +87,7 @@ export class UserController {
 
       // Verificar contraseña si el usuario existe
       const isPasswordValid = bcrypt.compareSync(
-        password_hash,
+        password,
         user.password_hash
       );
 
@@ -271,4 +271,32 @@ export class UserController {
       });
     }
   }
+
+  async getAllAgents(
+    req: Request,
+    res: Response
+  ): Promise<void | Response<any>> {
+    try {
+      const agentRepository = AppDataSource.getRepository(Agent);
+
+      const allAgents = await agentRepository.find({
+        relations: ["user"],
+      });
+
+      const agentsWithDetails = allAgents.map((agent) => ({
+        id: agent.id,
+        name: agent.user.name,
+        photo: agent.photo,
+        specialty: agent.specialty,
+      }));
+
+      res.status(200).json(agentsWithDetails);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error while getting agent",
+      });
+    }
+  }
+
+
 }

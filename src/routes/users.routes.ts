@@ -13,7 +13,7 @@ router.get("/:id", userController.getProfile);
 router.patch("/:id", userController.update);
 router.get("/get/allusers", userController.getAllUsers);
 router.delete("/:id", userController.deleteUser);
-
+router.get("/get/agents", userController.getAllAgents);
 
 
 export default router;

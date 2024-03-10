@@ -3,13 +3,13 @@ export interface CreateUserRequestBody {
     last_name: string;
     address: string;
     email: string;  
-    password_hash: string;   
+    password: string;   
     phone_number: string;
  }
 
  export interface LoginUserRequestBody {
     email: string;
-    password_hash: string;
+    password: string;
  }
 
 export interface TokenData {
