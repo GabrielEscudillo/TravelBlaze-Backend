@@ -34,5 +34,5 @@ export interface CreateAgentRequestBody {
    address: string;
    email: string;
    phone_number: string;
-   password_hash: string;
+   password: string;
 }

@@ -127,7 +127,7 @@ export class UserController {
       const id = +req.params.id;
 
       const userRepository = AppDataSource.getRepository(User);
-      const user = await userRepository.find({
+      const user = await userRepository.findOne({
         where: { id: id }, // Filtrar citas por el ID del usuario
         select: ["id", "name", "last_name", "phone_number", "email", "address"], // Seleccionar solo los campos necesarios
       });
@@ -217,7 +217,7 @@ export class UserController {
     req: Request<{}, {}, CreateAgentRequestBody>,
     res: Response
   ): Promise<void | Response<any>> {
-    const { name, last_name, phone_number, address, email, password_hash } =
+    const { name, last_name, phone_number, address, email, password } =
       req.body;
     const { photo, specialty } = req.body;
 
@@ -232,7 +232,7 @@ export class UserController {
         address,
         email,
         phone_number,
-        password_hash: bcrypt.hashSync(password_hash, 10),
+        password_hash: bcrypt.hashSync(password, 10),
         role: UserRoles.AGENT,
       });
       await userRepository.save(newUser);
@@ -247,9 +247,9 @@ export class UserController {
 
       res.status(201).json(newAgent);
     } catch (error: any) {
-      console.error("Error while creating flightxxx:", error);
+      console.error("Error while creating agent:", error);
       res.status(500).json({
-        message: "Error while creating flightxxx",
+        message: "Error while creating agent",
         error: error.message,
       });
     }
@@ -293,7 +293,7 @@ export class UserController {
       res.status(200).json(agentsWithDetails);
     } catch (error) {
       res.status(500).json({
-        message: "Error while getting agent",
+        message: "Error while getting agents",
       });
     }
   }
