@@ -11,6 +11,7 @@ router.delete("/:id", appointmentController.deleteAppointment)
 router.get("/agent/:id", appointmentController.getByAgent)
 router.get("/user/:id", appointmentController.getById)
 router.get("/allappointments", appointmentController.getAllAppointments)
+router.get("/allservices", appointmentController.getAllServices)
 
 
 

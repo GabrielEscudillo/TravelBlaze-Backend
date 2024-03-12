@@ -4,6 +4,7 @@ import { AppDataSource } from "../database/data-source";
 import { CreateAppointmentsRequestBody } from "../types/types";
 import { Agent } from "../models/Agent";
 import { User } from "../models/User";
+import { Service } from "../models/Service";
 
 export class AppointmentController {
   async create(
@@ -169,8 +170,10 @@ export class AppointmentController {
     }
   }
 
-
-  async getAllAppointments(req: Request, res: Response): Promise<void | Response<any>> {
+  async getAllAppointments(
+    req: Request,
+    res: Response
+  ): Promise<void | Response<any>> {
     try {
       const appointmentRepository = AppDataSource.getRepository(Appointment);
 
@@ -189,7 +192,7 @@ export class AppointmentController {
           service_id: true,
           id: true,
         },
-          relations: ["agent", "agent.user", "user", "service"]
+        relations: ["agent", "agent.user", "user", "service"],
       };
 
       if (page && limit) {
@@ -203,15 +206,13 @@ export class AppointmentController {
         filter
       );
 
-    //   const appointmentsWithAgentNames = allAppointments.map(appointment => ({
-    //     ...appointment,
-    //     artist_name: appointment.agent.user.name, // Assuming 'name' is the property for artist's name
-    //     user_name: appointment.user.name,
-    //     user_last_name: appointment.user.last_name,
-      
+      //   const appointmentsWithAgentNames = allAppointments.map(appointment => ({
+      //     ...appointment,
+      //     artist_name: appointment.agent.user.name, // Assuming 'name' is the property for artist's name
+      //     user_name: appointment.user.name,
+      //     user_last_name: appointment.user.last_name,
 
-
-    // }));
+      // }));
 
       res.status(200).json({
         count,
@@ -226,6 +227,22 @@ export class AppointmentController {
     }
   }
 
+  async getAllServices(
+    req: Request,
+    res: Response
+  ): Promise<void | Response<any>> {
+    try {
+      const serviceRepository = AppDataSource.getRepository(Service);
 
+      const allServices = await serviceRepository.find({
+        select: ["id", "service_name"],
+      });
 
+      res.status(200).json(allServices);
+    } catch (error) {
+      res.status(500).json({
+        message: "Error while getting agents",
+      });
+    }
+  }
 }
