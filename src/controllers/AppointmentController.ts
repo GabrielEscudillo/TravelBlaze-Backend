@@ -26,6 +26,19 @@ export class AppointmentController {
           .json({ message: "El agenta especificado no existe." });
       }
 
+      const duplicatedAppointment = await appointmentRepository.findOne({
+        where: {
+          date: data.date,
+          time: data.time,
+          agent_id: data.agent_id,
+        },
+      });
+      if (duplicatedAppointment) {
+        return res.status(400).json({
+          message: "Ya existe una cita programada para esta fecha y hora con el mismo agente.",
+        });
+      }
+
       const newAppointment = await appointmentRepository.save(data);
       res.status(201).json({
         message: "Appointment created successfully",
@@ -205,14 +218,6 @@ export class AppointmentController {
       const [allAppointments, count] = await appointmentRepository.findAndCount(
         filter
       );
-
-      //   const appointmentsWithAgentNames = allAppointments.map(appointment => ({
-      //     ...appointment,
-      //     artist_name: appointment.agent.user.name, // Assuming 'name' is the property for artist's name
-      //     user_name: appointment.user.name,
-      //     user_last_name: appointment.user.last_name,
-
-      // }));
 
       res.status(200).json({
         count,

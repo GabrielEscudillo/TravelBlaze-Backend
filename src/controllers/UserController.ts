@@ -183,6 +183,7 @@ export class UserController {
           name: true,
           last_name: true,
           phone_number: true,
+          email: true,
           role: true,
         },
         relations: ["role"],
