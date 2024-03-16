@@ -256,6 +256,7 @@ export class BookingController {
         cruise: booking.cruise
           ? {
               id: booking.cruise.id,
+              cruise_line: booking.cruise.cruise_line,
               cabin: booking.cruise.cabin,
               route: booking.cruise.route,
               date_of_departure: booking.cruise.date_of_departure,
