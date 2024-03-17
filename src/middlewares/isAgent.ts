@@ -1,15 +1,17 @@
-// import { NextFunction, Request, Response } from "express";
-// import { StatusCodes } from "http-status-codes";
+import { NextFunction, Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
+import { UserRoles } from "../constants/UserRoles";
 
-// export const isArtist = (req: Request, res: Response, next: NextFunction) => {
 
-//    const roles = req.tokenData.userRoles;
+export const isAgent = (req: any, res: Response, next: NextFunction) => {
 
-//    if (!roles.includes("artist")) {
-//       return res.status(StatusCodes.FORBIDDEN).json({
-//          message: "You are not allowed to access this resource",
-//       });
-//    }
+   const roles = req.tokenData.userRoles;
 
-//    next();
-// };
+   if (!roles.includes("agent")) {
+      return res.status(StatusCodes.FORBIDDEN).json({
+         message: "You are not allowed to access this resource",
+      });
+   }
+
+   next();
+};
