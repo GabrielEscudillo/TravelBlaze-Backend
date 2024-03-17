@@ -190,8 +190,8 @@ export class AppointmentController {
     try {
       const appointmentRepository = AppDataSource.getRepository(Appointment);
 
-      const page = req.query.page ? Number(req.query.page) : null;
-      const limit = req.query.limit ? Number(req.query.limit) : null;
+      const page = req.query.page ? Number(req.query.page) : 1;
+      const limit = req.query.limit ? Number(req.query.limit) : 6;
 
       interface filter {
         [key: string]: any;

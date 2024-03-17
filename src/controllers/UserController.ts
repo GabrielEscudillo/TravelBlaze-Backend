@@ -200,7 +200,7 @@ export class UserController {
 
       const usersWithRoles = allUsers.map((user) => ({
         ...user,
-        role_name: user.role.role_name, // Assuming 'name' is the property for artist's name
+        role_name: user.role.role_name, 
       }));
       res.status(200).json({
         count,
