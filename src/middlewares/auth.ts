@@ -5,7 +5,7 @@ import { TokenData } from "../types/types";
 
 // -----------------------------------------------------------------------------
 
-export const auth = (req: Request, res: Response, next: NextFunction) => {
+export const auth = (req: any, res: Response, next: NextFunction) => {
    req.headers;
 
    const token = req.headers.authorization?.split(" ")[1];
@@ -27,7 +27,7 @@ export const auth = (req: Request, res: Response, next: NextFunction) => {
          userRoles: decoded.userRoles,
       };
 
-    //   req.tokenData = decodedPayload;
+      req.tokenData = decodedPayload;
 
       next();
    } catch (error) {
