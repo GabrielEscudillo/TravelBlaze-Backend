@@ -26,9 +26,6 @@ This project embarked on the creation of a sophisticated API intricately woven w
 
 ## Description
 
-
-Certainly! Here's a refined version in English:
-
 Our backend system empowers users to seamlessly register, log in, and request appointments with our agents to plan their dream vacations. Furthermore, users can delve into the intricacies of their bookings, gaining comprehensive insights into their travel itineraries.
 
 In addition, our platform enables agents to efficiently manage their daily appointments, facilitating meticulous planning and the delivery of top-notch services to clients. Agents also have the capability to create bookings, ensuring that users have access to their travel plans upon logging in.
