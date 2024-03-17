@@ -281,8 +281,8 @@ export class BookingController {
     try {
       const bookingRepository = AppDataSource.getRepository(Booking);
 
-      const page = req.query.page ? Number(req.query.page) : null;
-      const limit = req.query.limit ? Number(req.query.limit) : null;
+      const page = req.query.page ? Number(req.query.page) : 1;
+      const limit = req.query.limit ? Number(req.query.limit) : 3;
 
       const filter: any = {
         relations: ["flight", "hotel", "cruise", "user"],
