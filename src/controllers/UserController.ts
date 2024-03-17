@@ -55,13 +55,11 @@ export class UserController {
     const userRepository = AppDataSource.getRepository(User);
 
     try {
-      // Validar existencia de email y contraseña
       if (!email || !password) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           message: "Email or password is required",
         });
       }
-      // Encontrar un usuario por email
       const user = await userRepository.findOne({
         where: {
           email: email,
@@ -78,27 +76,23 @@ export class UserController {
         },
       });
 
-      // Verificar usuario inexistente
       if (!user) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           message: "Bad email or password",
         });
       }
 
-      // Verificar contraseña si el usuario existe
       const isPasswordValid = bcrypt.compareSync(
         password,
         user.password_hash
       );
 
-      // Verificar contraseña valida
       if (!isPasswordValid) {
         return res.status(StatusCodes.BAD_REQUEST).json({
           message: "Bad email or password",
         });
       }
 
-      // Generar token
       const userRole = user.role.role_name;
 
       const tokenPayload: TokenData = {
@@ -128,8 +122,8 @@ export class UserController {
 
       const userRepository = AppDataSource.getRepository(User);
       const user = await userRepository.findOne({
-        where: { id: id }, // Filtrar citas por el ID del usuario
-        select: ["id", "name", "last_name", "phone_number", "email", "address"], // Seleccionar solo los campos necesarios
+        where: { id: id }, 
+        select: ["id", "name", "last_name", "phone_number", "email", "address"], 
       });
 
       if (!user) {
@@ -226,7 +220,6 @@ export class UserController {
     const agentRepository = AppDataSource.getRepository(Agent);
 
     try {
-      // Crear nuevo booking
       const newUser = userRepository.create({
         name,
         last_name,
@@ -238,7 +231,6 @@ export class UserController {
       });
       await userRepository.save(newUser);
 
-      // Crear nuevo vuelo asociado al booking
       const newAgent = agentRepository.create({
         user: newUser,
         photo,

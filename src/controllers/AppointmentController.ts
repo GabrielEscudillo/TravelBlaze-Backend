@@ -15,7 +15,6 @@ export class AppointmentController {
       const data = req.body;
       const appointmentRepository = AppDataSource.getRepository(Appointment);
 
-      // Verificar si el agenta con el agent_id proporcionado existe en la base de datos
       const agentRepository = AppDataSource.getRepository(Agent);
       const agent = await agentRepository.findOne({
         where: { id: data.agent_id },
@@ -96,33 +95,29 @@ export class AppointmentController {
 
   async getByAgent(req: Request, res: Response): Promise<void | Response<any>> {
     try {
-      const userId = +req.params.id; // Obtener el user_id de los parámetros de la ruta
+      const userId = +req.params.id; 
       const userRepository = AppDataSource.getRepository(User);
 
-      // Buscar el usuario con la relación con el agenta
       const user = await userRepository
         .createQueryBuilder("user")
         .leftJoinAndSelect("user.agent", "agent")
         .where("user.id = :userId", { userId })
         .getOne();
 
-      // Si el usuario no existe, devuelve un error 404
       if (!user || !user.agent) {
         return res
           .status(404)
           .json({ message: "User or associated agent not found" });
       }
 
-      const agentId = user.agent.id; // Obtener el agent_id asociado al usuario
-
+      const agentId = user.agent.id; 
       const appointmentRepository = AppDataSource.getRepository(Appointment);
       const myAppointments = await appointmentRepository.find({
-        where: { agent_id: agentId }, // Filtrar citas por el agent_id obtenido
-        relations: ["user", "service"], // Cargar la relación con el usuario asociado a la cita
-        select: ["id", "date", "time", "agent_id", "service_id"], // Seleccionar solo los campos necesarios
+        where: { agent_id: agentId }, 
+        relations: ["user", "service"], 
+        select: ["id", "date", "time", "agent_id", "service_id"],
       });
 
-      // Mapear las citas para incluir el nombre del usuario
       const appointmentsWithUserName = myAppointments.map((appointment) => ({
         id: appointment.id,
         date: appointment.date,
@@ -154,12 +149,12 @@ export class AppointmentController {
       const id = +req.params.id;
       const appointmentRepository = AppDataSource.getRepository(Appointment);
       const myAppointments = await appointmentRepository.find({
-        where: { user_id: id }, // Filtrar citas por el ID del usuario
-        relations: ["agent", "agent.user", "service"], // Cargar las relaciones del agenta y del usuario asociado
-        select: ["id", "date", "time", "agent"], // Seleccionar solo los campos necesarios
+        where: { user_id: id }, 
+        relations: ["agent", "agent.user", "service"], 
+        select: ["id", "date", "time", "agent"], 
       });
 
-      // Mapear las citas para incluir el nombre del agenta
+
       const appointmentsWithAgentName = myAppointments.map((appointment) => ({
         id: appointment.id,
         date: appointment.date,
