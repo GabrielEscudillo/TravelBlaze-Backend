@@ -11,8 +11,8 @@
   <li><a href="#description">Description</a></li> 
   <li><a href="#technologies-used">Technologies Used</a></li>
   <li><a href="#db-diagram">DB Diagram</a></li>
+  <li><a href="#installation">Installation</a></li>
   <li><a href="#endpoints">Endpoints</a></li>
-  <li><a href="#future-functionalities">Future Functionalities</a></li>
   <li><a href="#acknowledgements">Acknowledgements</a></li>
   <li><a href="#contact">Contact</a></li>
 </ol>
@@ -58,6 +58,16 @@ On the other hand, each client can book an appointment with the travel agent of 
 <div style="text-align: center;">
  <img src= "./assets/diagram.png" style="height: 600"/>
 </div>
+
+## Installation
+
+- Clone the repository.
+- Run `$ npm install`.
+- Connect your repository to the database.
+- Run migrations `$ npm rundb:migrate`.
+- Run `$ npm run dev`.
+
+The application will be accessible via [http://localhost:5173/](http://localhost:5173/) for the frontend and [http://localhost:3000/](http://localhost:3000/) for the backend.
 
 ## Endpoints
 
@@ -242,16 +252,6 @@ On the other hand, each client can book an appointment with the travel agent of 
           GET http://localhost:3000/bookings/mybookings/:id
 
 </details>
-
-## Future Functionalities
-
-<input type="checkbox"> Add functionality to prevent overlapping appointments.
-<br>
-<input type="checkbox"> Limit access to customers.
-<br>
-<input type="checkbox"> Change date format.
-<br>
-<input type="checkbox"> Allow adding more products in a single appointment.
 
 ## Acknowledgements
 
