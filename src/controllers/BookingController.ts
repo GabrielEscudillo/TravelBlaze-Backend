@@ -164,7 +164,6 @@ export class BookingController {
     const cruiseRepository = AppDataSource.getRepository(Cruise);
 
     try {
-      // Crear nuevo booking
       const newBooking = bookingRepository.create({
         user_id,
         date_of_purchase,
@@ -172,7 +171,6 @@ export class BookingController {
       });
       await bookingRepository.save(newBooking);
 
-      // Crear nuevo vuelo asociado al booking
       const newCruise = cruiseRepository.create({
         booking: newBooking,
         cruise_line,
@@ -183,10 +181,8 @@ export class BookingController {
       });
       const savedCruise = await cruiseRepository.save(newCruise);
 
-      // Obtener el ID del vuelo guardado
       const cruiseId = savedCruise.id;
 
-      // Actualizar el booking con el ID del vuelo generado
       newBooking.cruise_id = cruiseId;
       await bookingRepository.save(newBooking);
 

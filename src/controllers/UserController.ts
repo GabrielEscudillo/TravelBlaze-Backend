@@ -171,8 +171,8 @@ export class UserController {
     try {
       const userRepository = AppDataSource.getRepository(User);
 
-      const page = req.query.page ? Number(req.query.page) : null;
-      const limit = req.query.limit ? Number(req.query.limit) : null;
+      const page = req.query.page ? Number(req.query.page) : 1;
+      const limit = req.query.limit ? Number(req.query.limit) : 5;
 
       interface filter {
         [key: string]: any;
